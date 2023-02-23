@@ -67,7 +67,12 @@ def set_velocity_body(vehicle, vx, vy, vz):
     
 def get_speed(current_pos):
     # For decelerating speed
-    return 0.5 # m/s
+    if (current_pos > 0):
+        #for positive x value (right)
+        return -0.125(current_pos-2)^2 + 0.5
+    else:
+        #for negative x value (left)
+        return -0.125(current_pos-2)^2 - 0.5
     
 #-- Move from aruco
 def gerakDrone(x, y):
