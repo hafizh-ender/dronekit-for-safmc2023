@@ -68,7 +68,7 @@ def set_velocity_body(vehicle, vx, vy, vz):
 def get_speed(current_pos):
     
     
-#-- Move from aruco
+#-- Move from aruco HIHIHI
 def gerakDrone(x, y):
     if (x >= 2):
         set_velocity_body(vehicle, gnd_speed, 0, 0)
