@@ -82,19 +82,31 @@ def gerakDrone(x, y):
     elif (x <= -2):
         set_velocity_body(vehicle, -gnd_speed, 0, 0)
     elif (x < 2 and x >= 0):
+        #decelerates velocity down to 0
         set_velocity_body(vehicle, get_speed(x), 0, 0)
+        #once velocity has reached 0
+        if (-0.1 < x < 0.1):
+            # After we reached the x threshold, stop x velocity and move y function
+            if (y >= 2):
+                set_velocity_body(vehicle, 0, gnd_speed, 0)
+            elif (y <= -2):
+                set_velocity_body(vehicle, 0, -gnd_speed, 0)
+            elif (y < 2 and y >= 0):
+                set_velocity_body(vehicle, 0, get_speed(y), 0)
+            elif (y > -2 and y <= 0):
+                set_velocity_body(vehicle, 0, get_speed(y), 0)
     elif (x > -2 and x <= 0):
-        set_velocity_body(vehicle, get_speed(x), 0)
-    else:
-        # After we reached the x position, check the y position
-        if (y >= 2):
-            set_velocity_body(vehicle, 0, gnd_speed, 0)
-        elif (y <= -2):
-            set_velocity_body(vehicle, 0, -gnd_speed, 0)
-        elif (y < 2 and y >= 0):
-            set_velocity_body(vehicle, 0, get_speed(y), 0)
-        elif (y > -2 and y <= 0):
-            set_velocity_body(vehicle, 0, get_speed(y), 0)
+        set_velocity_body(vehicle, get_speed(x), 0, 0)
+        if (-0.1 < x < 0.1):
+            if (y >= 2):
+                set_velocity_body(vehicle, 0, gnd_speed, 0)
+            elif (y <= -2):
+                set_velocity_body(vehicle, 0, -gnd_speed, 0)
+            elif (y < 2 and y >= 0):
+                set_velocity_body(vehicle, 0, get_speed(y), 0)
+            elif (y > -2 and y <= 0):
+                set_velocity_body(vehicle, 0, get_speed(y), 0)
+
 
 def gerakDroneEmergency(string):
     # Used only if x and y position is not detected, manually set the direction based on command from the previous aruco marker
