@@ -66,10 +66,12 @@ def set_velocity_body(vehicle, vx, vy, vz):
     vehicle.flush()
     
 def get_speed(current_pos):
+    # For decelerating speed
+    return 0.5 # m/s
     
-    
-#-- Move from aruco HIHIHI
+#-- Move from aruco
 def gerakDrone(x, y):
+    # Check x position relative to the next aruco
     if (x >= 2):
         set_velocity_body(vehicle, gnd_speed, 0, 0)
     elif (x <= -2):
@@ -79,6 +81,7 @@ def gerakDrone(x, y):
     elif (x > -2 and x <= 0):
         set_velocity_body(vehicle, get_speed(x), 0)
     else:
+        # After we reached the x position, check the y position
         if (y >= 2):
             set_velocity_body(vehicle, 0, gnd_speed, 0)
         elif (y <= -2):
@@ -87,20 +90,19 @@ def gerakDrone(x, y):
             set_velocity_body(vehicle, 0, get_speed(y), 0)
         elif (y > -2 and y <= 0):
             set_velocity_body(vehicle, 0, get_speed(y), 0)
-    
 
-    # else:
-    #     if emergency == 'RIGHT':
-    #         set_velocity_body(vehicle, gnd_speed, 0, 0)
-    #     elif emergency == 'LEFT':
-    #         set_velocity_body(vehicle,-gnd_speed, 0, 0)
-    #     elif emergency == 'BACK':
-    #         set_velocity_body(vehicle, 0, -gnd_speed, 0)
-    #     elif emergency == 'FORWARD':
-    #         set_velocity_body(vehicle, 0, gnd_speed, 0)
+def gerakDroneEmergency(string):
+    # Used only if x and y position is not detected, manually set the direction based on command from the previous aruco marker
+    if string == "FORWARD":
+        set_velocity_body(vehicle, 0, gnd_speed, 0)
+    elif string == "BACK":
+        set_velocity_body(vehicle, 0, -gnd_speed, 0)
+    elif string == "RIGHT":
+        set_velocity_body(vehicle, gnd_speed, 0, 0)
+    elif string == "LEFT":
+        set_velocity_body(vehicle, -gnd_speed, 0, 0)
     
     
 #---- MAIN FUNCTION
 #- Takeoff
 arm_and_takeoff(10)
-
