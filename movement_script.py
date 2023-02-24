@@ -73,7 +73,7 @@ def get_speed(current_pos):
     else:
         #for negative x value (left)
         return -0.125(current_pos-2)^2 - 0.5
-    
+
 #-- Move from aruco
 def gerakDrone(x, y):
     # Check x position relative to the next aruco
@@ -107,6 +107,71 @@ def gerakDrone(x, y):
             elif (y > -2 and y <= 0):
                 set_velocity_body(vehicle, 0, get_speed(y), 0)
 
+# --Move drone based on input from aruco with PID
+setpoint    = 0
+
+error       = 0
+integral    = 0
+derivative  = 0
+
+error_prev  = 0
+
+dt          = 0.01                  # data time sampling
+
+# need tuning
+Kp          = 0.05                  # proportional coefficient
+Ki          = 0.0005                # integral coefficient
+Kd          = 0.0000000005          # derivative coefficient
+
+giliran_x_gerak = True
+
+def gerakDronePID(x, y):
+    global error_prev, integral, derivative, giliran_x_gerak
+
+    if (giliran_x_gerak):
+        if (abs(x) > 0):
+            set_velocity_body(vehicle, getSpeedPID(x), 0, 0)
+        else:
+            set_velocity_body(vehicle, 0, 0, 0)
+
+            error_prev = 0
+            integral = 0
+            derivative = 0
+
+            giliran_x_gerak = False
+    
+    if (not giliran_x_gerak):
+        if (abs(y) > 0):
+            set_velocity_body(vehicle, 0, getSpeedPID(y), 0)
+        else:
+            set_velocity_body(vehicle, 0, 0, 0)
+
+            error_prev = 0
+            integral = 0
+            derivative = 0
+
+            giliran_x_gerak = True 
+
+def getSpeedPID(feedback):
+    global error_prev, integral, derivative
+
+    # Get the error
+    error = feedback - setpoint
+    de = error - error_prev
+
+    # Summate the integral
+    integral = integral + de * dt / 2
+
+    # Get the derivative
+    derivative = de / dt
+
+    # Get the speed
+    speed = Kp * error + Ki * integral + Kd * derivative
+
+    # Simpan previous error
+    error_prev = error
+
+    return max(speed, 0.5)
 
 def gerakDroneEmergency(string):
     # Used only if x and y position is not detected, manually set the direction based on command from the previous aruco marker
