@@ -159,7 +159,7 @@ def getSpeedPID(feedback):
     de = error - error_prev
 
     # Summate the integral
-    integral = integral + de * dt / 2           # trapezoidal rule
+    integral = integral + (error + error_prev) * dt / 2           # trapezoidal rule
 
     # Get the derivative
     derivative = de / dt
