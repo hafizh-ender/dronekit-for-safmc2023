@@ -139,8 +139,7 @@ def gerakDronePID(x, y):
             derivative = 0
 
             giliran_x_gerak = False
-    
-    if (not giliran_x_gerak):
+    else:
         if (abs(y) > 0):
             set_velocity_body(vehicle, 0, getSpeedPID(y), 0)
         else:
@@ -160,7 +159,7 @@ def getSpeedPID(feedback):
     de = error - error_prev
 
     # Summate the integral
-    integral = integral + de * dt / 2
+    integral = integral + de * dt / 2           # trapezoidal rule
 
     # Get the derivative
     derivative = de / dt
@@ -171,7 +170,7 @@ def getSpeedPID(feedback):
     # Simpan previous error
     error_prev = error
 
-    return max(speed, 0.5)
+    return max(speed, gnd_speed)
 
 def gerakDroneEmergency(string):
     # Used only if x and y position is not detected, manually set the direction based on command from the previous aruco marker
